@@ -9,6 +9,19 @@ CitizenCare is a production-inspired civic technology platform that enables citi
 
 This project demonstrates full-stack engineering, quality engineering, automated testing, security validation, CI/CD, cloud deployment, and enterprise-grade software delivery practices.
 
+![React](https://img.shields.io/badge/React-19-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+![Node.js](https://img.shields.io/badge/Node.js-20-green)
+![Selenium](https://img.shields.io/badge/Selenium-WebDriver-brightgreen)
+![SuperTest](https://img.shields.io/badge/API-Automation-orange)
+![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
+![AWS](https://img.shields.io/badge/AWS-Cloud-orange)
+![CI/CD](https://img.shields.io/badge/CI/CD-Jenkins-red)
+
+
+
+
+
 [![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-Passing-emerald?style=for-the-badge&logo=jenkins)](./deployment/jenkins/Jenkinsfile)
 [![Quality Gate](https://img.shields.io/badge/Quality_Gate-100%25_Pass-blueviolet?style=for-the-badge&logo=shieldcheck)](./docs/test-strategy/TEST_STRATEGY.md)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
