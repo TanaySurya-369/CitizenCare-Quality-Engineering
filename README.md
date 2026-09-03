@@ -1,4 +1,13 @@
-# CitizenCare — Smart Public Service Complaint & Resolution Platform
+# CitizenCare – Smart Public Service Complaint & Resolution Platform
+
+> "I didn't just build an application.
+> I engineered the quality system around the application."
+
+🚀 Enterprise Civic-Tech Platform | React + TypeScript | Node.js | Selenium WebDriver | SuperTest | CI/CD | Docker | AWS | Quality Engineering & Test Automation Showcase
+
+CitizenCare is a production-inspired civic technology platform that enables citizens to report public infrastructure issues, track SLA-driven resolutions, and interact with municipal departments through a modern enterprise architecture.
+
+This project demonstrates full-stack engineering, quality engineering, automated testing, security validation, CI/CD, cloud deployment, and enterprise-grade software delivery practices.
 
 [![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-Passing-emerald?style=for-the-badge&logo=jenkins)](./deployment/jenkins/Jenkinsfile)
 [![Quality Gate](https://img.shields.io/badge/Quality_Gate-100%25_Pass-blueviolet?style=for-the-badge&logo=shieldcheck)](./docs/test-strategy/TEST_STRATEGY.md)
