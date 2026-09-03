@@ -1,0 +1,35 @@
+{
+  "validUsers": {
+    "citizen": {
+      "email": "citizen@citizencare.gov",
+      "password": "Citizen@123",
+      "name": "Johnathan Doe (Citizen)",
+      "role": "CITIZEN"
+    },
+    "staffRoads": {
+      "email": "staff.roads@citizencare.gov",
+      "password": "Staff@123",
+      "name": "Inspector Marcus Chen (Roads)",
+      "role": "STAFF"
+    },
+    "staffPower": {
+      "email": "staff.power@citizencare.gov",
+      "password": "Staff@123",
+      "name": "Field Engineer Alex Patel (Power)",
+      "role": "STAFF"
+    },
+    "admin": {
+      "email": "admin@citizencare.gov",
+      "password": "Admin@123",
+      "name": "Chief Administrator Sarah Jenkins",
+      "role": "ADMIN"
+    }
+  },
+  "newRegistration": {
+    "name": "Automated Test Citizen",
+    "email": "auto.citizen@citizencare.gov",
+    "password": "Password@123",
+    "phone": "+1 555-9988",
+    "role": "CITIZEN"
+  }
+}

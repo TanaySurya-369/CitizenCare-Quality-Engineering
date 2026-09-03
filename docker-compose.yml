@@ -1,0 +1,72 @@
+services:
+  # PostgreSQL Enterprise Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: citizencare-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: citizencare_db
+      POSTGRES_USER: citizencare_user
+      POSTGRES_PASSWORD: SecretPassword123!
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U citizencare_user -d citizencare_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Express REST API Backend
+  backend:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.backend
+    container_name: citizencare-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      DATABASE_URL: "postgresql://citizencare_user:SecretPassword123!@postgres:5432/citizencare_db?schema=public"
+      JWT_SECRET: "citizencare_super_secret_jwt_key_2026_enterprise_production_ready"
+      UPLOAD_DIR: "./uploads"
+    ports:
+      - "5000:5000"
+    volumes:
+      - uploads_data:/app/uploads
+
+  # React 19 Frontend Web Client
+  frontend:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.frontend
+    container_name: citizencare-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+  # Containerized Quality Engineering Test Runner
+  automation-runner:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.automation
+    container_name: citizencare-automation-runner
+    depends_on:
+      - backend
+    environment:
+      BASE_URL: "http://frontend:80"
+      API_BASE_URL: "http://backend:5000/api"
+      DATABASE_URL: "postgresql://citizencare_user:SecretPassword123!@postgres:5432/citizencare_db?schema=public"
+      HEADLESS: "true"
+    profiles:
+      - testing
+
+volumes:
+  pgdata:
+  uploads_data:

@@ -1,0 +1,68 @@
+{
+  "invalidLogins": [
+    {
+      "description": "Empty email and password",
+      "payload": { "email": "", "password": "" },
+      "expectedStatus": 400,
+      "expectedError": "VALIDATION_ERROR"
+    },
+    {
+      "description": "Malformed email format",
+      "payload": { "email": "not-an-email", "password": "Password@123" },
+      "expectedStatus": 400,
+      "expectedError": "VALIDATION_ERROR"
+    },
+    {
+      "description": "Incorrect password",
+      "payload": { "email": "citizen@citizencare.gov", "password": "WrongPassword!999" },
+      "expectedStatus": 401,
+      "expectedError": "INVALID_CREDENTIALS"
+    },
+    {
+      "description": "Non-existent user email",
+      "payload": { "email": "ghost.user@doesnotexist.gov", "password": "Password@123" },
+      "expectedStatus": 401,
+      "expectedError": "INVALID_CREDENTIALS"
+    }
+  ],
+  "invalidComplaints": [
+    {
+      "description": "Missing title",
+      "payload": {
+        "description": "This is a detailed description without a title.",
+        "location": "Main St"
+      },
+      "expectedStatus": 400
+    },
+    {
+      "description": "Short title boundary (< 5 chars)",
+      "payload": {
+        "title": "Road",
+        "description": "This is a detailed description with short title.",
+        "location": "Main St"
+      },
+      "expectedStatus": 400
+    },
+    {
+      "description": "Non-existent category ID",
+      "payload": {
+        "title": "Hazardous road sinkhole",
+        "description": "A very large sinkhole has opened in the lane.",
+        "categoryId": "00000000-0000-0000-0000-000000000000",
+        "location": "5th Ave"
+      },
+      "expectedStatus": 404
+    }
+  ],
+  "invalidRatings": [
+    { "rating": 0, "description": "Rating below minimum (0)" },
+    { "rating": 6, "description": "Rating above maximum (6)" },
+    { "rating": -1, "description": "Negative rating (-1)" }
+  ],
+  "sqlInjectionPayloads": [
+    "' OR '1'='1",
+    "'; DROP TABLE complaints; --",
+    "admin' --",
+    "' UNION SELECT * FROM users --"
+  ]
+}

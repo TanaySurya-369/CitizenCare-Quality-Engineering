@@ -1,0 +1,8 @@
+{
+  "name": "development",
+  "baseUrl": "http://localhost:5173",
+  "apiBaseUrl": "http://localhost:5000/api",
+  "defaultTimeout": 10000,
+  "browser": "chrome",
+  "headless": true
+}

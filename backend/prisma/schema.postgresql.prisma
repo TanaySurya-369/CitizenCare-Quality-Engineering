@@ -1,0 +1,206 @@
+// CitizenCare PostgreSQL Production Schema (for AWS RDS / Cloud Deployment)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  phone        String?
+  passwordHash String
+  role         String    @default("CITIZEN") // CITIZEN, STAFF, ADMIN
+  status       String    @default("ACTIVE")  // ACTIVE, SUSPENDED, PENDING
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  complaintsSubmitted Complaint[]             @relation("CitizenComplaints")
+  complaintsAssigned  Complaint[]             @relation("AssignedStaff")
+  statusChangesMade   ComplaintStatusHistory[]
+  assignmentsGiven    StaffAssignment[]       @relation("AssignedBy")
+  assignmentsReceived StaffAssignment[]       @relation("AssignedStaffRelation")
+  attachmentsUploaded Attachment[]
+  notifications       Notification[]
+  feedbacks           Feedback[]
+  auditLogs           AuditLog[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model Department {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  code        String   @unique
+  description String?
+  email       String?
+  headName    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       User[]
+  categories  ComplaintCategory[]
+  complaints  Complaint[]
+}
+
+model ComplaintCategory {
+  id              String      @id @default(uuid())
+  name            String      @unique
+  code            String      @unique
+  description     String?
+  departmentId    String
+  department      Department  @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  defaultPriority String      @default("MEDIUM")
+  slaHours        Int         @default(72)
+  icon            String?     @default("AlertCircle")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  complaints      Complaint[]
+}
+
+model Complaint {
+  id                     String    @id @default(uuid())
+  complaintNumber        String    @unique
+  citizenId              String
+  citizen                User      @relation("CitizenComplaints", fields: [citizenId], references: [id], onDelete: Cascade)
+  categoryId             String
+  category               ComplaintCategory @relation(fields: [categoryId], references: [id])
+  departmentId           String
+  department             Department @relation(fields: [departmentId], references: [id])
+  title                  String
+  description            String
+  location               String
+  latitude               Float?
+  longitude              Float?
+  priority               String    @default("MEDIUM")
+  status                 String    @default("SUBMITTED")
+  assignedStaffId        String?
+  assignedStaff          User?     @relation("AssignedStaff", fields: [assignedStaffId], references: [id])
+  expectedResolutionDate DateTime
+  resolvedDate           DateTime?
+  rejectionReason        String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  statusHistory   ComplaintStatusHistory[]
+  assignments     StaffAssignment[]
+  attachments     Attachment[]
+  feedback        Feedback?
+  notifications   Notification[]
+
+  @@index([citizenId])
+  @@index([status])
+  @@index([priority])
+  @@index([departmentId])
+  @@index([assignedStaffId])
+}
+
+model ComplaintStatusHistory {
+  id          String    @id @default(uuid())
+  complaintId String
+  complaint   Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  oldStatus   String?
+  newStatus   String
+  changedById String
+  changedBy   User      @relation(fields: [changedById], references: [id])
+  remarks     String?
+  createdAt   DateTime  @default(now())
+
+  @@index([complaintId])
+}
+
+model StaffAssignment {
+  id           String    @id @default(uuid())
+  complaintId  String
+  complaint    Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  staffId      String
+  staff        User      @relation("AssignedStaffRelation", fields: [staffId], references: [id])
+  assignedById String
+  assignedBy   User      @relation("AssignedBy", fields: [assignedById], references: [id])
+  assignedAt   DateTime  @default(now())
+  notes        String?
+  isActive     Boolean   @default(true)
+
+  @@index([complaintId])
+  @@index([staffId])
+}
+
+model Attachment {
+  id           String    @id @default(uuid())
+  complaintId  String
+  complaint    Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  fileName     String
+  originalName String
+  mimeType     String
+  fileSize     Int
+  fileUrl      String
+  uploadedById String
+  uploadedBy   User      @relation(fields: [uploadedById], references: [id])
+  createdAt    DateTime  @default(now())
+
+  @@index([complaintId])
+}
+
+model Notification {
+  id          String     @id @default(uuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  complaintId String?
+  complaint   Complaint? @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  title       String
+  message     String
+  type        String     @default("IN_APP")
+  isRead      Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+}
+
+model Feedback {
+  id                  String    @id @default(uuid())
+  complaintId         String    @unique
+  complaint           Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  citizenId           String
+  citizen             User      @relation(fields: [citizenId], references: [id])
+  rating              Int
+  comment             String?
+  resolutionConfirmed Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+
+  @@index([citizenId])
+  @@index([rating])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  action     String
+  entity     String
+  entityId   String?
+  details    String?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([entity])
+}
+
+model TestData {
+  id        String   @id @default(uuid())
+  testKey   String   @unique
+  testGroup String
+  payload   String
+  createdAt DateTime @default(now())
+}

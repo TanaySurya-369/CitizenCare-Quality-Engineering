@@ -1,0 +1,70 @@
+name: CitizenCare CI/CD Quality Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  quality-pipeline:
+    name: Build, Test & Quality Gates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: 2. Setup Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 3. Install Backend Dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: 4. Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: 5. Install Automation Dependencies
+        working-directory: ./automation
+        run: npm ci
+
+      - name: 6. Build Frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: 7. Sync Database Schema & Seed Data
+        working-directory: ./backend
+        run: |
+          npx prisma db push
+          npm run prisma:seed
+
+      - name: 8. Execute Backend Unit / TDD SLA Tests
+        working-directory: ./backend
+        run: npm test
+
+      - name: 9. Execute SuperTest REST API Automation Suite
+        working-directory: ./automation
+        run: npm run test:api
+
+      - name: 10. Execute Database Validation Tests
+        working-directory: ./automation
+        run: npm run test:db
+
+      - name: 11. Execute E2E Lifecycle Journey Tests
+        working-directory: ./automation
+        run: npm run test:e2e
+
+      - name: 12. Upload Mochawesome HTML Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: automation-reports
+          path: |
+            automation/reports/
+            automation/screenshots/
+          retention-days: 14

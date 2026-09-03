@@ -1,0 +1,43 @@
+{
+  "name": "citizencare-automation",
+  "version": "2.0.0",
+  "description": "CitizenCare Enterprise Quality Engineering & Test Automation Framework",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "npm run test:all",
+    "test:all": "mocha -r ts-node/register 'api/tests/**/*.spec.ts' 'database/tests/**/*.spec.ts' 'security/**/*.spec.ts' 'integration/**/*.spec.ts' 'ui/tests/**/*.spec.ts' --timeout 60000 --reporter mochawesome --reporter-options reportDir=reports,reportFilename=full-suite-report",
+    "test:api": "mocha -r ts-node/register 'api/tests/**/*.spec.ts' --timeout 30000 --reporter mochawesome --reporter-options reportDir=reports,reportFilename=api-suite-report",
+    "test:ui": "mocha -r ts-node/register 'ui/tests/**/*.spec.ts' --timeout 60000 --reporter mochawesome --reporter-options reportDir=reports,reportFilename=ui-suite-report",
+    "test:db": "mocha -r ts-node/register 'database/tests/**/*.spec.ts' --timeout 30000 --reporter mochawesome --reporter-options reportDir=reports,reportFilename=db-suite-report",
+    "test:security": "mocha -r ts-node/register 'security/**/*.spec.ts' --timeout 30000 --reporter mochawesome --reporter-options reportDir=reports,reportFilename=security-suite-report",
+    "test:integration": "mocha -r ts-node/register 'integration/**/*.spec.ts' --timeout 30000 --reporter mochawesome --reporter-options reportDir=reports,reportFilename=integration-suite-report",
+    "test:e2e": "mocha -r ts-node/register 'api/tests/complaints.api.spec.ts' 'integration/**/*.spec.ts' 'database/tests/**/*.spec.ts' --timeout 60000 --reporter mochawesome --reporter-options reportDir=reports,reportFilename=e2e-suite-report",
+    "smoke": "mocha -r ts-node/register 'ui/tests/smoke/**/*.spec.ts' 'api/tests/auth.api.spec.ts' --timeout 30000 --reporter mochawesome --reporter-options reportDir=reports,reportFilename=smoke-suite-report",
+    "sanity": "mocha -r ts-node/register 'ui/tests/sanity/**/*.spec.ts' 'api/tests/complaints.api.spec.ts' --timeout 30000 --reporter mochawesome --reporter-options reportDir=reports,reportFilename=sanity-suite-report",
+    "regression": "mocha -r ts-node/register 'api/tests/**/*.spec.ts' 'database/tests/**/*.spec.ts' 'security/**/*.spec.ts' 'integration/**/*.spec.ts' --timeout 60000 --reporter mochawesome --reporter-options reportDir=reports,reportFilename=regression-suite-report",
+    "coverage": "c8 --reporter=html --reporter=text --reporter=json-summary --report-dir=coverage mocha -r ts-node/register 'api/tests/**/*.spec.ts' 'database/tests/**/*.spec.ts' 'security/**/*.spec.ts' 'integration/**/*.spec.ts' --timeout 60000"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "axios": "^1.7.9",
+    "chai": "^4.3.7",
+    "dotenv": "^16.4.7",
+    "mocha": "^10.8.2",
+    "mochawesome": "^7.1.3",
+    "mochawesome-report-generator": "^6.2.0",
+    "selenium-webdriver": "^4.27.0",
+    "supertest": "^7.0.0",
+    "winston": "^3.17.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.16",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.17.10",
+    "@types/selenium-webdriver": "^4.1.27",
+    "@types/supertest": "^6.0.2",
+    "c8": "^12.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}

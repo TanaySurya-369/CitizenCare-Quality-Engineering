@@ -1,0 +1,30 @@
+# Containerized Quality Engineering Test Runner for CitizenCare
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install build dependencies & Chromium for Headless Selenium
+RUN apk add --no-cache \
+    chromium \
+    chromium-chromedriver \
+    bash \
+    curl
+
+ENV CHROME_BIN=/usr/bin/chromium-browser
+ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
+ENV HEADLESS=true
+ENV CI=true
+
+COPY backend/package*.json ./backend/
+COPY backend/prisma ./backend/prisma/
+RUN cd backend && npm ci
+
+COPY automation/package*.json ./automation/
+RUN cd automation && npm ci
+
+COPY backend/ ./backend/
+COPY automation/ ./automation/
+
+WORKDIR /app/automation
+
+CMD ["npm", "run", "regression"]
