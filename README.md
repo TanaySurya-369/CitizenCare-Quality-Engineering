@@ -1,7 +1,7 @@
 # CitizenCare – Smart Public Service Complaint & Resolution Platform
 
-> "I didn't just build an application.
-> I engineered the quality system around the application."
+> **"I didn't just build an application. I engineered the quality system around the application."**  
+> — A portfolio-grade civic technology platform combining full-stack architecture and principal-level quality engineering.
 
 🚀 Enterprise Civic-Tech Platform | React + TypeScript | Node.js | Selenium WebDriver | SuperTest | CI/CD | Docker | AWS | Quality Engineering & Test Automation Showcase
 
@@ -17,9 +17,6 @@ This project demonstrates full-stack engineering, quality engineering, automated
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Prisma_ORM-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.prisma.io/)
 [![Selenium WebDriver](https://img.shields.io/badge/Selenium_POM-TypeScript-43B02A?style=for-the-badge&logo=selenium&logoColor=white)](https://www.selenium.dev/)
 [![SuperTest](https://img.shields.io/badge/SuperTest-REST_Automation-FF6C37?style=for-the-badge&logo=postman&logoColor=white)](https://github.com/ladjs/supertest)
-
-> **"I didn't just build an application. I engineered the quality system around the application."**  
-> — A portfolio-grade civic technology platform combining full-stack architecture and principal-level quality engineering.
 
 ---
 
